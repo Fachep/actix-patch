@@ -1,22 +1,4 @@
-use std::{
-    future::Future,
-    pin::Pin,
-    task::{Context, Poll},
-    time::Duration,
-};
-
-use futures_core::ready;
-use pin_project_lite::pin_project;
-use tokio::{
-    sync::oneshot,
-    time::{sleep_until, Instant},
-};
-
-use crate::{
-    actor::Actor,
-    clock::{sleep, Sleep},
-    fut::{ActorFuture, ActorStream},
-};
+use tokio::sync::oneshot;
 
 #[deprecated(
     since = "0.11.0",
@@ -58,6 +40,27 @@ where
         }
     }
 }
+
+#[cfg(feature = "clock")]
+mod clock {
+
+use std::{
+    future::Future,
+    pin::Pin,
+    task::{Context, Poll},
+    time::Duration,
+};
+
+use futures_core::ready;
+use pin_project_lite::pin_project;
+use tokio::time::{sleep_until, Instant};
+
+use crate::{
+    actor::Actor,
+    fut::{ActorFuture, ActorStream},
+    clock::{sleep, Sleep},
+};
+
 
 pin_project! {
     /// An `ActorFuture` that runs a function in the actor's context after a specified amount of time.
@@ -102,6 +105,7 @@ pin_project! {
         timeout: Sleep,
     }
 }
+
 
 impl<A: Actor> TimerFunc<A> {
     /// Creates a new `TimerFunc` with the given duration.
@@ -229,3 +233,8 @@ impl<A: Actor> ActorStream<A> for IntervalFunc<A> {
         }
     }
 }
+
+}
+
+#[cfg(feature = "clock")]
+pub use clock::*;

@@ -28,6 +28,10 @@ macros = ["actix-macros", "actix_derive"]
 # Adds assertion to prevent processing too many messages on event loop
 mailbox_assert = []
 
+clock = ["actix-rt/time"]
+
+web = ["clock", "actix-rt/web"]
+
 [dependencies]
 actix-macros = { version = "0.2", optional = true }
 actix-rt = { version = "2", default-features = false }
@@ -62,8 +66,8 @@ required-features = ["macros"]
 
 [[example]]
 name = "weak_addr"
-required-features = ["macros"]
+required-features = ["macros", "actix-rt/signal", "clock"]
 
 [[example]]
 name = "weak_recipient"
-required-features = ["macros"]
+required-features = ["macros", "actix-rt/signal", "clock"]

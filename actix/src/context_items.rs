@@ -2,18 +2,22 @@ use std::{
     future::Future,
     pin::Pin,
     task::{self, Poll},
-    time::Duration,
 };
+
+#[cfg(feature = "clock")]
+use std::time::Duration;
 
 use futures_core::{ready, stream::Stream};
 use pin_project_lite::pin_project;
 
 use crate::{
     actor::{Actor, ActorContext, AsyncContext},
-    clock::Sleep,
     fut::ActorFuture,
     handler::{Handler, Message, MessageResponse},
 };
+
+#[cfg(feature = "clock")]
+use crate::clock::Sleep;
 
 pub(crate) struct ActorWaitItem<A: Actor>(Pin<Box<dyn ActorFuture<A, Output = ()>>>);
 
@@ -49,6 +53,7 @@ where
     }
 }
 
+#[cfg(feature = "clock")]
 pin_project! {
     pub(crate) struct ActorDelayedMessageItem<M: Message>{
         msg: Option<M>,
@@ -57,6 +62,7 @@ pin_project! {
     }
 }
 
+#[cfg(feature = "clock")]
 impl<M: Message> ActorDelayedMessageItem<M> {
     pub fn new(msg: M, timeout: Duration) -> Self {
         Self {
@@ -66,6 +72,7 @@ impl<M: Message> ActorDelayedMessageItem<M> {
     }
 }
 
+#[cfg(feature = "clock")]
 impl<A, M> ActorFuture<A> for ActorDelayedMessageItem<M>
 where
     A: Actor + Handler<M>,

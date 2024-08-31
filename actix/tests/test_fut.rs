@@ -1,3 +1,5 @@
+#![cfg(feature = "clock")]
+
 use std::{
     sync::{
         atomic::{AtomicBool, Ordering},

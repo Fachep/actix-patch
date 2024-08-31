@@ -2,8 +2,8 @@
 resolver = "2"
 members = [
     "actix",
-    "actix-broker",
-    "actix-derive",
+#   "actix-broker",
+#   "actix-derive",
 ]
 
 [workspace.package]
@@ -12,8 +12,9 @@ rust-version = "1.72"
 
 [patch.crates-io]
 actix = { path = "actix" }
-actix-broker = { path = "actix-broker" }
-actix_derive = { path = "actix-derive" }
+# actix-broker = { path = "actix-broker" }
+# actix_derive = { path = "actix-derive" }
+actix-rt = { git = "https://github.com/Fachep/actix-net-patch" }
 
 [profile.release]
 lto = true

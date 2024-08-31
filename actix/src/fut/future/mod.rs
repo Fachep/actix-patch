@@ -4,12 +4,15 @@ use std::{
     ops::{Deref, DerefMut},
     pin::Pin,
     task::{Context, Poll},
-    time::Duration,
 };
+
+#[cfg(feature = "clock")]
+use std::time::Duration;
 
 pub use map::Map;
 use pin_project_lite::pin_project;
 pub use then::Then;
+#[cfg(feature = "clock")]
 pub use timeout::Timeout;
 
 use crate::actor::Actor;
@@ -18,6 +21,7 @@ mod either;
 mod map;
 pub mod result;
 mod then;
+#[cfg(feature = "clock")]
 mod timeout;
 
 /// Trait for types which are a placeholder of a value that may become
@@ -147,6 +151,7 @@ pub trait ActorFutureExt<A: Actor>: ActorFuture<A> {
     /// Add timeout to futures chain.
     ///
     /// `Err(())` returned as a timeout error.
+    #[cfg(feature = "clock")]
     fn timeout(self, timeout: Duration) -> Timeout<Self>
     where
         Self: Sized,

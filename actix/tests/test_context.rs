@@ -1,4 +1,5 @@
 #![cfg(feature = "macros")]
+#![cfg(feature = "clock")]
 #![allow(clippy::let_unit_value)]
 
 use std::{

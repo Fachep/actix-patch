@@ -1,3 +1,5 @@
+#![cfg(feature = "clock")]
+
 use std::{
     collections::HashSet,
     sync::{

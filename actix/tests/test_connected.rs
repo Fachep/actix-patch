@@ -1,4 +1,5 @@
 #![cfg(feature = "macros")]
+#![cfg(feature = "clock")]
 
 use std::time::Duration;
 

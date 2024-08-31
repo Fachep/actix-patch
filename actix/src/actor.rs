@@ -1,3 +1,4 @@
+#[cfg(feature = "clock")]
 use std::time::Duration;
 
 use actix_rt::ArbiterHandle;
@@ -7,11 +8,16 @@ use log::error;
 use crate::{
     address::{channel, Addr},
     context::Context,
-    context_items::{ActorDelayedMessageItem, ActorMessageItem, ActorMessageStreamItem},
+    context_items::{ActorMessageItem, ActorMessageStreamItem},
     fut::{ActorFuture, ActorStreamExt},
     handler::{Handler, Message},
     mailbox::DEFAULT_CAPACITY,
     stream::StreamHandler,
+};
+
+#[cfg(feature = "clock")]
+use crate::{
+    context_items::ActorDelayedMessageItem,
     utils::{IntervalFunc, TimerFunc},
 };
 
@@ -422,6 +428,7 @@ where
     /// called. This bypasses the mailbox capacity, and
     /// will always queue the message. If the actor is in the `stopped` state, an
     /// error will be raised.
+    #[cfg(feature = "clock")]
     fn notify_later<M>(&mut self, msg: M, after: Duration) -> SpawnHandle
     where
         A: Handler<M>,
@@ -440,6 +447,7 @@ where
     /// The closure gets passed the same actor and its
     /// context. Execution gets cancelled if the context's stop method
     /// gets called.
+    #[cfg(feature = "clock")]
     fn run_later<F>(&mut self, dur: Duration, f: F) -> SpawnHandle
     where
         F: FnOnce(&mut A, &mut A::Context) + 'static,
@@ -449,6 +457,7 @@ where
 
     /// Spawns a job to execute the given closure periodically, at a
     /// specified fixed interval.
+    #[cfg(feature = "clock")]
     fn run_interval<F>(&mut self, dur: Duration, f: F) -> SpawnHandle
     where
         F: FnMut(&mut A, &mut A::Context) + 'static,
@@ -458,6 +467,7 @@ where
 
     /// Spawns a periodic `task` function to begin executing at the given `start` time, and with the
     /// given `interval` duration.
+    #[cfg(feature = "clock")]
     fn run_interval_at<F>(
         &mut self,
         start: tokio::time::Instant,

@@ -2,8 +2,10 @@ use std::{
     marker::PhantomData,
     pin::Pin,
     task::{Context, Poll},
-    time::Duration,
 };
+
+#[cfg(feature = "clock")]
+use std::time::Duration;
 
 pub use collect::Collect;
 pub use finish::Finish;
@@ -14,6 +16,7 @@ use pin_project_lite::pin_project;
 pub use skip_while::SkipWhile;
 pub use take_while::TakeWhile;
 pub use then::Then;
+#[cfg(feature = "clock")]
 pub use timeout::Timeout;
 
 use super::future::ActorFuture;
@@ -26,6 +29,7 @@ mod map;
 mod skip_while;
 mod take_while;
 mod then;
+#[cfg(feature = "clock")]
 mod timeout;
 
 /// A stream of values, not all of which may have been produced yet.
@@ -131,6 +135,7 @@ pub trait ActorStreamExt<A: Actor>: ActorStream<A> {
     /// Add timeout to stream.
     ///
     /// `Err(())` returned as a timeout error.
+    #[cfg(feature = "clock")]
     fn timeout(self, timeout: Duration) -> Timeout<Self>
     where
         Self: Sized,

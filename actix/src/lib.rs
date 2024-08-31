@@ -39,6 +39,7 @@ mod stream;
 mod supervisor;
 
 pub mod actors;
+#[cfg(feature = "clock")]
 pub mod clock;
 pub mod fut;
 pub mod io;
@@ -114,8 +115,10 @@ pub mod prelude {
         stream::StreamHandler,
         supervisor::Supervisor,
         sync::{SyncArbiter, SyncContext},
-        utils::{IntervalFunc, TimerFunc},
     };
+
+    #[cfg(feature = "clock")]
+    pub use crate::utils::{IntervalFunc, TimerFunc};
 }
 
 pub mod dev {
